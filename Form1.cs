@@ -18,20 +18,22 @@ namespace QR_Code_Application
             InitializeComponent();
         }
 
+        Bitmap bitmap;
+
+
         private void button1_Click(object sender, EventArgs e)
         {
-            MessagingToolkit.QRCode.Codec.QRCodeEncoder encoder = new MessagingToolkit.QRCode.Codec.QRCodeEncoder();
-            encoder.QRCodeScale = 8;
-            Bitmap bitmap = encoder.Encode(EncoderTextBox.Text);
-            pictureBox1.Image = bitmap;
-            SaveFileDialog sfd = new SaveFileDialog()
+            if (EncoderTextBox.Text!=null)
             {
-                Filter = "*JPEG| *.jpg",
-                ValidateNames = true
-            };
-            if (sfd.ShowDialog() == DialogResult.OK)
-            {
-                bitmap.Save(sfd.FileName, System.Drawing.Imaging.ImageFormat.Jpeg);
+                SaveFileDialog sfd = new SaveFileDialog()
+                {
+                    Filter = "*JPEG| *.jpg",
+                    ValidateNames = true
+                };
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    bitmap.Save(sfd.FileName, System.Drawing.Imaging.ImageFormat.Jpeg);
+                }
             }
         }
 
@@ -49,6 +51,14 @@ namespace QR_Code_Application
                 MessagingToolkit.QRCode.Codec.QRCodeDecoder decoder = new MessagingToolkit.QRCode.Codec.QRCodeDecoder();
                 DecoderTextBox.Text = decoder.Decode(new QRCodeBitmapImage(pictureBox1.Image as Bitmap));
             }
+        }
+
+        private void EncoderTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            MessagingToolkit.QRCode.Codec.QRCodeEncoder encoder = new MessagingToolkit.QRCode.Codec.QRCodeEncoder();
+            encoder.QRCodeScale = 8;
+            bitmap = encoder.Encode(EncoderTextBox.Text);
+            pictureBox1.Image = bitmap;
         }
     }
 }
